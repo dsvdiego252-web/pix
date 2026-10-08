@@ -78,12 +78,6 @@
       max-width: 520px;
       width: 100%;
     }
-    .nene {
-      font-size: clamp(110px, 38vw, 200px);
-      line-height: 1;
-      display: inline-block;
-      animation: pula 0.8s ease-in-out infinite alternate;
-    }
     h1 {
       margin: 12px 0 4px;
       font-size: clamp(28px, 8vw, 80px);
@@ -139,10 +133,6 @@
     }
 
     @keyframes gira { to { transform: rotate(360deg); } }
-    @keyframes pula {
-      from { transform: translateY(0) rotate(-6deg); }
-      to { transform: translateY(-18px) rotate(6deg); }
-    }
     @keyframes balanca {
       0%, 100% { transform: rotate(-3deg) scale(1); }
       50% { transform: rotate(3deg) scale(1.06); }
@@ -151,7 +141,7 @@
       to { transform: translateY(110vh) rotate(720deg); }
     }
     @media (prefers-reduced-motion: reduce) {
-      .nene, h1, .spinner { animation: none; }
+      h1, .spinner { animation: none; }
     }
   </style>
 </head>
@@ -164,7 +154,6 @@
   </section>
 
   <section id="pegadinha">
-    <div class="nene" role="img" aria-label="Nenê sorrindo">👶</div>
     <h1>BRINCADEIRINHA!<br />😜</h1>
     <p class="sub">Eu sou o PIX do Brasil 🇧🇷</p>
     <p class="sub2">Achou que o dinheiro ia sair da sua conta, né? 😂</p>
