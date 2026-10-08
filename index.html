@@ -7,6 +7,10 @@
   <style>
     :root {
       color-scheme: light;
+      --pix: #32bcad;
+      --verde: #009c3b;
+      --amarelo: #ffdf00;
+      --azul: #002776;
     }
     * {
       box-sizing: border-box;
@@ -14,27 +18,215 @@
     html, body {
       margin: 0;
       width: 100%;
-      height: 100%;
+      min-height: 100%;
       font-family: Arial, Helvetica, sans-serif;
       background: #ffffff;
+      overflow-x: hidden;
     }
     body {
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 24px;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 24px 16px;
+      text-align: center;
+    }
+
+    /* Tela 1: pagamento "de mentirinha" */
+    #pagando {
+      max-width: 420px;
+      width: 100%;
+    }
+    .logo {
+      font-size: clamp(40px, 12vw, 64px);
+      font-weight: 800;
+      color: var(--pix);
+      letter-spacing: 2px;
+      margin: 0 0 8px;
+    }
+    .logo span {
+      display: inline-block;
+      transform: rotate(45deg);
+      margin-right: 8px;
+    }
+    .valor {
+      font-size: clamp(18px, 5vw, 30px);
+      color: #333;
+      margin: 8px 0 24px;
+    }
+    .spinner {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px;
+      border: 7px solid #e6f7f5;
+      border-top-color: var(--pix);
+      border-radius: 50%;
+      animation: gira 0.9s linear infinite;
+    }
+    .status {
+      font-size: 18px;
+      color: #555;
+      min-height: 1.4em;
+    }
+
+    /* Tela 2: a pegadinha */
+    #pegadinha {
+      display: none;
+      position: relative;
+      z-index: 2;
+      max-width: 520px;
+      width: 100%;
+    }
+    .nene {
+      font-size: clamp(110px, 38vw, 200px);
+      line-height: 1;
+      display: inline-block;
+      animation: pula 0.8s ease-in-out infinite alternate;
     }
     h1 {
-      margin: 0;
-      font-size: clamp(28px, 6vw, 72px);
-      text-align: center;
-      color: #111111;
-      line-height: 1.15;
+      margin: 12px 0 4px;
+      font-size: clamp(28px, 8vw, 80px);
+      line-height: 1.05;
+      font-weight: 900;
+      color: var(--verde);
+      text-shadow: 3px 3px 0 var(--amarelo), 6px 6px 0 var(--azul);
+      animation: balanca 1.2s ease-in-out infinite;
+    }
+    .sub {
+      font-size: clamp(20px, 5.5vw, 30px);
+      color: #222;
+      margin: 18px 0 6px;
       font-weight: 700;
+    }
+    .sub2 {
+      font-size: clamp(16px, 4.5vw, 22px);
+      color: #555;
+      margin: 0 0 24px;
+    }
+    .comprovante {
+      display: inline-block;
+      background: #fffbe0;
+      border: 3px dashed var(--verde);
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-size: 17px;
+      color: #333;
+      line-height: 1.5;
+      margin-bottom: 24px;
+      transform: rotate(-2deg);
+    }
+    button {
+      font: inherit;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      background: var(--pix);
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 26px;
+      cursor: pointer;
+    }
+
+    .confete {
+      position: fixed;
+      top: -20px;
+      width: 12px;
+      height: 18px;
+      z-index: 1;
+      pointer-events: none;
+      animation: cai linear forwards;
+    }
+
+    @keyframes gira { to { transform: rotate(360deg); } }
+    @keyframes pula {
+      from { transform: translateY(0) rotate(-6deg); }
+      to { transform: translateY(-18px) rotate(6deg); }
+    }
+    @keyframes balanca {
+      0%, 100% { transform: rotate(-3deg) scale(1); }
+      50% { transform: rotate(3deg) scale(1.06); }
+    }
+    @keyframes cai {
+      to { transform: translateY(110vh) rotate(720deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .nene, h1, .spinner { animation: none; }
     }
   </style>
 </head>
 <body>
-  <h1>Eu Sou O PIX Do Brasil</h1>
+  <section id="pagando" aria-live="polite">
+    <p class="logo"><span>◆</span>PIX</p>
+    <p class="valor">Transferindo <strong>R$ 1.000.000,00</strong></p>
+    <div class="spinner" aria-hidden="true"></div>
+    <p class="status" id="status">Conectando ao banco...</p>
+  </section>
+
+  <section id="pegadinha">
+    <div class="nene" role="img" aria-label="Nenê sorrindo">👶</div>
+    <h1>BRINCADEIRINHA!<br />😜</h1>
+    <p class="sub">Eu sou o PIX do Brasil 🇧🇷</p>
+    <p class="sub2">Achou que ia cair dinheiro na sua conta, né? 😂</p>
+    <div class="comprovante">
+      🧾 <strong>Comprovante</strong><br />
+      Valor: R$ 0,00<br />
+      Pago em: sorrisos 😁<br />
+      Status: <strong>PEGADINHA CONCLUÍDA</strong>
+    </div>
+    <br />
+    <button type="button" id="denovo">Cair de novo 🔁</button>
+  </section>
+
+  <script>
+    var mensagens = [
+      'Conectando ao banco...',
+      'Verificando seu saldo... 🤔',
+      'Contando as moedinhas... 🪙',
+      'Quase lá...'
+    ];
+    var pagando = document.getElementById('pagando');
+    var pegadinha = document.getElementById('pegadinha');
+    var status = document.getElementById('status');
+    var timers = [];
+
+    function confetes() {
+      var cores = ['#009c3b', '#ffdf00', '#002776', '#32bcad', '#ffffff'];
+      for (var i = 0; i < 80; i++) {
+        var c = document.createElement('div');
+        c.className = 'confete';
+        c.style.left = Math.random() * 100 + 'vw';
+        c.style.background = cores[i % cores.length];
+        c.style.border = '1px solid rgba(0,0,0,0.08)';
+        c.style.animationDuration = 2 + Math.random() * 2.5 + 's';
+        c.style.animationDelay = Math.random() * 0.8 + 's';
+        document.body.appendChild(c);
+        setTimeout(function (el) { el.remove(); }.bind(null, c), 5500);
+      }
+    }
+
+    function revelar() {
+      pagando.style.display = 'none';
+      pegadinha.style.display = 'block';
+      confetes();
+      if (navigator.vibrate) {
+        try { navigator.vibrate([100, 60, 100]); } catch (e) {}
+      }
+    }
+
+    function comecar() {
+      timers.forEach(clearTimeout);
+      timers = [];
+      pegadinha.style.display = 'none';
+      pagando.style.display = 'block';
+      mensagens.forEach(function (msg, i) {
+        timers.push(setTimeout(function () { status.textContent = msg; }, i * 900));
+      });
+      timers.push(setTimeout(revelar, mensagens.length * 900));
+    }
+
+    document.getElementById('denovo').addEventListener('click', comecar);
+    comecar();
+  </script>
 </body>
 </html>
